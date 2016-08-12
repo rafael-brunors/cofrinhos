@@ -1,0 +1,51 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<ui:define name="titulo">
+		Responsáveis
+	</ui:define>
+	
+	<ui:define name="corpo">
+	
+		<p:button value="Novo" outcome="CadastroResponsavel.xhtml" />
+		<br/>
+		<br/>
+		<h:form id="formulario">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:dataTable id="tabelaResponsaveis" var="responsaveis" value="#{listaResponsavelBean.responsaveis}" emptyMessage="Lista Vazia" paginator="true" rows="10" rowsPerPageTemplate="5,10,15,20,25,30"
+			 filterMatchMode="contains">
+				<p:column headerText="Id" rendered="false" > Ou style="display: none"
+					<h:outputText value="#{responsaveis.id}" />
+				</p:column>
+				<p:column headerText="Nome" sortBy="#{responsaveis.nome}" filterBy="#{responsaveis.nome}" >
+					<h:outputText value="#{responsaveis.nome}" />
+				</p:column>
+				<p:column headerText="Telefone" sortBy="#{responsaveis.telefone}" filterBy="#{responsaveis.telefone}" >
+					<h:outputText value="#{responsaveis.telefone}" />
+				</p:column>
+				<p:column headerText="Endereço" sortBy="#{responsaveis.endereco}" filterBy="#{responsaveis.endereco}" >
+					<h:outputText value="#{responsaveis.endereco}" />
+				</p:column>
+				
+				<p:column style="width:90px;text-align: center">
+		             <p:button icon="ui-icon-pencil" title="Editar" outcome="CadastroResponsavel">
+		             	<f:param name="responsavel" value="#{responsaveis.id}" />
+		            </p:button>
+		            <p:commandButton icon="ui-icon-trash" title="View" action="#{listaResponsavelBean.excluir()}" update=":formulario:tabelaResponsaveis">
+		            	<p:confirm header="Confirmar exclusão" message="Confirma excluir?" icon="ui-icon-alert" />
+		                <f:setPropertyActionListener value="#{responsaveis}" target="#{listaResponsavelBean.responsavel}" />
+		            </p:commandButton>
+	        	</p:column>
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

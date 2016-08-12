@@ -1,0 +1,38 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="titulo">
+		Cadastro de Depósito
+	</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+    		<o:viewParam name="deposito" value="#{cadastroDepositoBean.deposito}" />
+    	</f:metadata>
+	
+		<h:form id="formulario">
+			<div align="center">
+				<p:focus for="data"/>
+				<p:messages id="messages" closable="true" />
+				
+				<h:inputHidden value="#{cadastroDepositoBean.deposito.id}"/>
+				
+				<p:panelGrid columns="2" style="text-align:center">
+					<p:outputLabel for="data" value="Data do depoósito:" />
+					<p:calendar id="data" value="#{cadastroDepositoBean.deposito.data}" pattern="dd/MM/yyyy" mask="true" title="Data do depósito." placeholder="Data do depósito." required="true" />
+					
+					<p:outputLabel for="valor" value="Valor depositado:" />
+					<p:inputText id="valor" value="#{cadastroDepositoBean.deposito.valor}" maxlength="27" 
+						styleClass="moeda" size="18" converter="bigDecimalConverter" title="Valor depositado." placeholder="Valor depositado."/>
+					
+					<p:commandButton value="Salvar" action="#{cadastroDepositoBean.salvar}" ajax="false"/>
+					<p:button value="Cancelar" outcome="ListaDepositos" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,65 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="titulo">
+		Arrecadações
+	</ui:define>
+	
+	<ui:define name="corpo">
+		<p:button value="Novo" outcome="CadastroArrecadacao" />
+		<br/>
+		<br/>
+		
+		<h:form id="formulario">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:dataTable id="tabelaArrecadacoes" var="arrecadacao" value="#{listaArrecadacoesBean.arrecadacoes}" emptyMessage="Lista Vazia" paginator="true" rows="10" rowsPerPageTemplate="5,10,15,20,25,30"
+				filteredValue="#{listaArrecadacoesBean.filteredArrecadacoes}" filterMatchMode="contains">
+				<p:column headerText="Id" rendered="false" >
+					<h:outputText value="#{arrecadacao.id}" />
+				</p:column>
+	
+				<p:column headerText="Data de recolhimento" sortBy="#{arrecadacao.dataRecolhimento}" filterBy="#{arrecadacao.dataRecolhimento}" >
+					<h:outputText value="#{arrecadacao.dataRecolhimento}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Valor" sortBy="#{arrecadacao.valor}" filterBy="#{arrecadacao.valor}" >
+					<h:outputText value="#{arrecadacao.valor}">
+	    				<f:convertNumber type="currency"/>
+	    			</h:outputText>
+				</p:column>
+	
+				<p:column headerText="Estabelecimento" sortBy="#{arrecadacao.periodo.estabelecimento}" filterBy="#{arrecadacao.periodo.estabelecimento}" >
+					<h:outputText value="#{arrecadacao.periodo.estabelecimento}" />
+				</p:column>
+				
+				<p:column headerText="Responsável" sortBy="#{arrecadacao.periodo.responsavel.nome}" filterBy="#{arrecadacao.periodo.responsavel.nome}" >
+					<h:outputText value="#{arrecadacao.periodo.responsavel.nome}" />
+				</p:column>
+				
+				<p:column headerText="Cofre" sortBy="#{arrecadacao.cofre.numeroDoCofre}" filterBy="#{arrecadacao.cofre.numeroDoCofre}" >
+					<h:outputText value="#{arrecadacao.cofre.numeroDoCofre}" />
+				</p:column>
+				
+				<p:column style="width:90px;text-align: center">
+		            <p:button icon="ui-icon-pencil" title="Editar" outcome="CadastroArrecadacao">
+		            	<f:param name="arrecadacao" value="#{arrecadacao.id}" />
+		            </p:button>
+		            <p:commandButton icon="ui-icon-trash" title="View" action="#{listaArrecadacoesBean.excluir}" update=":formulario:tabelaArrecadacoes">
+		            	<p:confirm header="Confirmar exclusão" message="Confirma excluir?" icon="ui-icon-alert" />
+		                <f:setPropertyActionListener value="#{arrecadacao}" target="#{listaArrecadacoesBean.arrecadacaoSelecionada}" />
+		            </p:commandButton>
+		        </p:column>
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

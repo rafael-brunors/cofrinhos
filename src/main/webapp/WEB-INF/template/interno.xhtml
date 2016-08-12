@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><ui:insert name="titulo">Cofrinhos do Davi</ui:insert></title>
+	
+	<h:outputScript library="js" name="jquery.maskMoney.js" />
+	<h:outputScript library="css" name="sistema.css" />
+</h:head>
+<h:body>
+		<!-- Menu -->
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Início" url="../cofrinhododavi/index.xhtml" icon="ui-icon-home"/>
+				<p:submenu label="Cadastros" icon="ui-icon-folder-open">
+					<p:menuitem value="Cofres" url="../cofrinhododavi/ListaCofres.xhtml"></p:menuitem>
+					<p:menuitem value="Responsáveis" url="../cofrinhododavi/ListaResponsaveis.xhtml"></p:menuitem>
+				</p:submenu>
+				<p:menuitem value="Arrecadações" url="../cofrinhododavi/ListaArrecadacoes.xhtml" icon="ui-icon-circle-plus"/>
+				<p:menuitem value="Depósitos" url="../cofrinhododavi/ListaDepositos.xhtml" icon="ui-icon-circle-plus"/>
+				<p:menuitem value="Saldos" url="../cofrinhododavi/Saldos.xhtml" icon="fa fa-line-chart fa-fw"/>
+												
+				<f:facet name="options">
+					<p:commandButton onclick="document.location='#{request.contextPath}/j_spring_security_logout'" type="button" value="Sair" icon="ui-icon-extlink" />
+				</f:facet>
+				
+			</p:menubar>
+		</h:form>
+		<p:ajaxStatus style="position: absolute; right: 10px;" onsuccess="configurarMoeda()">
+			<f:facet name="start">
+				<h:graphicImage library="imagens" name="carregando.gif"/>
+			</f:facet>
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+		
+		<div id="titulo">
+			<div class="page-header">
+				<h1><ui:insert name="titulo">Cofrinhos do Davi</ui:insert></h1>
+				<p:separator />
+			</div>
+		</div>
+		
+		<div id="corpo">
+			<ui:insert name="corpo" />
+		</div>
+		
+		<script>
+			function configurarMoeda() {
+				$(".moeda").maskMoney({prefix:'R$ ', decimal: ",", thousands: ".", allowZero: true, affixesStay: true });
+			}
+			
+			$(document).ready(function() {
+				configurarMoeda();
+			});
+		</script>
+		
+		<style type="text/css">  
+			body {
+				font-family: cursive !important;
+			}
+		    .ui-widget {  
+		    	font-family: cursive !important;
+		        font-size: 16px !important;  
+		    }  
+	</style>
+	</h:body>
+</html>

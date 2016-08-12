@@ -1,0 +1,41 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="titulo">
+		Cadastro de Responsáveis
+	</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata >
+    		<o:viewParam name="responsavel" value="#{cadastroResponsavelBean.responsavel}" />
+    	</f:metadata>
+    	
+    	<h:form>
+    		<p:focus for="nome"/>
+    		<div align="center">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<h:inputHidden value="#{cadastroResponsavelBean.responsavel.id}"/>
+				<p:panelGrid columns="2" style="text-align:center">
+					<p:outputLabel for="nome" value="Nome do Responsável:"></p:outputLabel>
+					<p:inputText id="nome" value="#{cadastroResponsavelBean.responsavel.nome}" required="true" title="O nome deve ter no mínimo 3 letras e somente letras." placeholder="Nome do Responsável" >
+						<pe:keyFilter regEx=" /[a-zA-Z\u00C0-\u00FF ]/i"/> <!-- ou /[a-zA-ZáàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ] -->
+					</p:inputText>
+					
+					<p:outputLabel for="telefone" value="Telefone:"></p:outputLabel>
+					<p:inputMask id="telefone" value="#{cadastroResponsavelBean.responsavel.telefone}" required="true" mask="(99) 9999-9999" title="Telefone do responsável." placeholder="Telefone do Responsável"/>
+					
+					<p:outputLabel for="endereco" value="Endereço:"></p:outputLabel>
+					<p:inputText id="endereco" value="#{cadastroResponsavelBean.responsavel.endereco}" required="true" title="Endereço do responsável." placeholder="Endereço do Responsável"/>
+				
+					<p:commandButton value="Salvar" action="#{cadastroResponsavelBean.salvar}" update="@form" />
+					<p:button value="Cancelar" outcome="ListaResponsaveis.xhtml" />
+				</p:panelGrid>
+			</div>
+    	</h:form>
+	</ui:define>
+</ui:composition>

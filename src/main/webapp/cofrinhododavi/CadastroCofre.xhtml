@@ -1,0 +1,128 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="titulo">
+		Cadastro de cofres
+	</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+    		<o:viewParam name="cofre" value="#{cadastroCofreBean.cofre}" />
+    		<f:event listener="#{cadastroCofreBean.atualizarResponsavel_EstabelecimentoAtual}" type="preRenderView" />
+    	</f:metadata>
+	
+		<h:form id="frmcadastrocofre">
+			<div align="center">
+				<p:focus for="numeroDoCofre"/>
+				<p:messages id="messages" closable="true" />
+				
+				<h:inputHidden value="#{cadastroCofreBean.cofre.id}"/>
+				
+				<p:panelGrid columns="2" style="text-align:center">
+					<p:outputLabel for="numeroDoCofre" value="Número do cofre:" />
+					<p:inputText  id="numeroDoCofre" value="#{cadastroCofreBean.cofre.numeroDoCofre}" required="true">
+						<p:keyFilter regEx="/[\d]/" />
+					</p:inputText>
+					
+					<p:outputLabel for="responsavelAtual" value="Responsável atual:" />
+					<p:outputLabel id="responsavelAtual" value="#{cadastroCofreBean.responsavelAtual}"/>
+					
+					<p:outputLabel for="estabelecimentoAtual" value="Estabelecimento onde se encontra o cofre atualmente:" />
+					<p:outputLabel id="estabelecimentoAtual" value="#{cadastroCofreBean.estabelecimentoAtual}" />
+					
+				</p:panelGrid>
+				
+				<div align="left">
+					<br/>
+						<p:commandButton value="Novo Período" title="Novo Período" oncomplete="PF('dlg').show()" update="frmCadastroPeriodo"/>
+				    <br/>
+				    <br/>
+				</div>
+				
+				<p:dataTable id="tabelaPeriodos" var="periodo" value="#{cadastroCofreBean.cofre.periodosDoResponsavel}" emptyMessage="Lista Vazia." paginator="true" rows="10" rowsPerPageTemplate="5,10,15,20,25,30"
+				filteredValue="#{cadastroCofreBean.filteredPeriodosDosResponsaveis}" filterMatchMode="contains" resizableColumns="true">
+					<p:column headerText="Id" rendered="false" > <!-- Ou style="display: none" -->
+						<h:outputText value="#{periodo.id}" />
+					</p:column>
+					<p:column headerText="Início" sortBy="#{periodo.inicio}" filterBy="#{periodo.inicio}" 
+						style="width:150px;text-align: center">
+						<h:outputText value="#{periodo.inicio}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Término" sortBy="#{periodo.termino}" filterBy="#{periodo.termino}" 
+						style="width:150px;text-align: center">
+						<h:outputText value="#{periodo.termino}">
+							 <f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Responsável" sortBy="#{periodo.responsavel.nome}" filterBy="#{periodo.responsavel.nome}" >
+						<h:outputText value="#{periodo.responsavel.nome}" />
+					</p:column>
+					<p:column headerText="Estabelecimento" sortBy="#{periodo.estabelecimento}" filterBy="#{periodo.estabelecimento}" >
+						<h:outputText value="#{periodo.estabelecimento}" />
+					</p:column>
+					
+					<p:column style="width:85px;text-align: center">
+						<p:commandButton icon="ui-icon-pencil" title="Editar"
+						 action="#{cadastroCofreBean.abrirDialogo}" oncomplete="PF('dlg').show()" update="frmCadastroPeriodo">
+							<f:setPropertyActionListener value="#{periodo}" target="#{cadastroCofreBean.periodoDoResponsavelSelecionado}"/>
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-trash" title="View" action="#{cadastroCofreBean.excluirPeriodo}" update="tabelaPeriodos frmcadastrocofre:responsavelAtual frmcadastrocofre:estabelecimentoAtual">
+			            	<p:confirm header="Confirmar exclusão" message="Confirma excluir?" icon="ui-icon-alert" />
+			                <f:setPropertyActionListener value="#{periodo}" target="#{cadastroCofreBean.periodoDoResponsavelSelecionado}" />
+			            </p:commandButton>
+					</p:column>
+				</p:dataTable>
+				
+				<br/>
+				<p:commandButton value="Salvar" action="#{cadastroCofreBean.salvar}" ajax="false"/>
+				<p:button value="Cancelar" outcome="ListaCofres" />
+			</div>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+		    
+		</h:form>
+		
+	    <p:dialog header="Cadastro do Período do Responsável" showEffect="fade" hideEffect="fade" widgetVar="dlg" modal="true">
+	    	<h:form id="frmCadastroPeriodo">
+		    	<div align="center">
+			    	<p:messages id="messagesDlg" autoUpdate="false" closable="true" />
+					<p:panelGrid columns="2" style="text-align:center">
+						<p:outputLabel for="inicio" value="Início:"></p:outputLabel>
+						<p:calendar id="inicio" value="#{cadastroCofreBean.periodoDoResponsavelSelecionado.inicio}" pattern="dd/MM/yyyy" mask="true" required="true"  title="Data de início do período do responsável." placeholder="Data de início do período do responsável." >
+							<p:ajax event="dateSelect" update="termino" listener="#{cadastroCofreBean.ajustaData()}" />
+						</p:calendar>
+			
+						<p:outputLabel for="termino" value="Término:"></p:outputLabel>
+						<p:calendar id="termino" value="#{cadastroCofreBean.periodoDoResponsavelSelecionado.termino}" pattern="dd/MM/yyyy" mask="true" title="Data de término do período do responsável." placeholder="Data de término do período do responsável." 
+							mindate="#{cadastroCofreBean.periodoDoResponsavelSelecionado.inicio}">
+							<p:ajax event="dateSelect" update="@this inicio" listener="#{cadastroCofreBean.ajustaData()}" />
+						</p:calendar>
+						
+						<p:outputLabel for="responsavel" value="Responsável"></p:outputLabel>
+						<p:selectOneMenu id="responsavel" value="#{cadastroCofreBean.periodoDoResponsavelSelecionado.responsavel}" required="true">
+			   				<f:selectItem itemLabel="Selecione um Responsável" itemValue="" />
+			       			<f:selectItems value="#{cadastroCofreBean.responsaveis}" 
+			   				var="responsavel" itemValue="#{responsavel}" itemLabel="#{responsavel.nome}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="estabelecimento" value="Estabelecimento onde se encontra o cofre:"></p:outputLabel>
+						<p:inputText id="estabelecimento" value="#{cadastroCofreBean.periodoDoResponsavelSelecionado.estabelecimento}" title="Estabelecimento onde se encontra o cofre." placeholder="Estabelecimento onde se encontra o cofre." required="true"/>
+						
+						<p:commandButton value="Salvar" action="#{cadastroCofreBean.dlgSalvar}" update="messagesDlg @form frmcadastrocofre:tabelaPeriodos frmcadastrocofre:responsavelAtual frmcadastrocofre:estabelecimentoAtual"/>
+						<p:commandButton value="Cancelar" update="@form" immediate="true"  onclick="PF('dlg').hide()"/>
+						
+					</p:panelGrid>
+				</div>
+			</h:form>
+	    </p:dialog>
+	</ui:define>
+</ui:composition>

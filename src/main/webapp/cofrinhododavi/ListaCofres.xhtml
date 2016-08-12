@@ -1,0 +1,45 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="titulo">
+		Cofres
+	</ui:define>
+		
+	<ui:define name="corpo">
+		<p:button value="Novo" outcome="CadastroCofre" />
+		<br/>
+		<br/>
+		
+		<h:form id="formulario">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:dataTable id="tabelaCofres" var="cofres" value="#{listaCofresBean.cofres}" emptyMessage="Lista Vazia" paginator="true" rows="10" rowsPerPageTemplate="5,10,15,20,25,30"
+				filteredValue="#{listaCofresBean.filteredCofres}" filterMatchMode="contains">
+				<p:column headerText="Id" rendered="false" > <!-- Ou style="display: none" -->
+					<h:outputText value="#{cofres.id}" />
+				</p:column>
+	
+				<p:column headerText="Número do cofre" sortBy="#{cofres.numeroDoCofre}" filterBy="#{cofres.numeroDoCofre}" >
+					<h:outputText value="#{cofres.numeroDoCofre}" />
+				</p:column>
+	
+				<p:column style="width:90px;text-align: center">
+			             <p:button icon="ui-icon-pencil" title="Editar" outcome="CadastroCofre">
+			             	<f:param name="cofre" value="#{cofres.id}" />
+			            </p:button>
+			            <p:commandButton icon="ui-icon-trash" title="View" action="#{listaCofresBean.excluir}" update=":formulario:tabelaCofres">
+			            	<p:confirm header="Confirmar exclusão" message="Confirma excluir?" icon="ui-icon-alert" />
+			                <f:setPropertyActionListener value="#{cofres}" target="#{listaCofresBean.cofre}" />
+			            </p:commandButton>
+		        </p:column>
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+	    </h:form>
+	</ui:define>
+</ui:composition>

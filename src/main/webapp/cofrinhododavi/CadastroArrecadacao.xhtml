@@ -1,0 +1,55 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="titulo">
+		Cadastro de Arrecadação
+	</ui:define>
+	
+	<ui:define name="corpo">
+		<f:metadata>
+    		<o:viewParam name="arrecadacao" value="#{cadastroArrecadacaoBean.arrecadacao}" />
+    		<f:event listener="#{cadastroArrecadacaoBean.cofreSelecionado}" type="preRenderView" />
+    	</f:metadata>
+	
+		<h:form>
+			<div align="center">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				
+				<h:inputHidden value="#{cadastroArrecadacaoBean.arrecadacao.id}"/>
+				<p:panelGrid columns="2" style="text-align:center">
+				
+					<p:outputLabel for="cofre" value="Número do cofre:" />
+					<p:selectOneMenu id="cofre" value="#{cadastroArrecadacaoBean.arrecadacao.cofre}" required="true">
+		   				<f:selectItem itemLabel="Selecione um Cofre" itemValue="" />
+		       			<f:selectItems value="#{cadastroArrecadacaoBean.cofres}"
+		   				var="cofre" itemValue="#{cofre}" itemLabel="#{cofre.numeroDoCofre}"/>
+		   				<p:ajax event="itemSelect" listener="#{cadastroArrecadacaoBean.cofreSelecionado}" update="messages estabelecimento responsavel" process="cofre data"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel for="data" value="Data de recolhimento:" />
+					<p:calendar id="data" value="#{cadastroArrecadacaoBean.arrecadacao.dataRecolhimento}" pattern="dd/MM/yyyy" 
+					 	mask="true" required="true"  title="Data de recolhimento." placeholder="Data de recolhimento." >
+					 	<p:ajax event="dateSelect" listener="#{cadastroArrecadacaoBean.cofreSelecionado()}" update="estabelecimento responsavel" process="cofre data"/>
+				 	</p:calendar>
+					
+					<p:outputLabel for="valor" value="Valor recolhido:" />
+					<p:inputText id="valor" value="#{cadastroArrecadacaoBean.arrecadacao.valor}" maxlength="27" 
+						styleClass="moeda" size="18" converter="bigDecimalConverter" />
+					
+			        <p:outputLabel for="estabelecimento" value="Estabelecimento:" />
+			        <p:inputText readonly="true" id="estabelecimento" value="#{cadastroArrecadacaoBean.arrecadacao.periodo.estabelecimento}" />
+			        
+			        <p:outputLabel for="responsavel" value="Responsável:" />
+			        <p:inputText readonly="true" id="responsavel" value="#{cadastroArrecadacaoBean.arrecadacao.periodo.responsavel.nome}" />
+			        
+			        <p:commandButton value="Salvar" action="#{cadastroArrecadacaoBean.salvar}" ajax="false" />
+					<p:button value="Cancelar" outcome="ListaArrecadacoes.xhtml" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

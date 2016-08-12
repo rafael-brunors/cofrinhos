@@ -1,0 +1,53 @@
+<ui:composition template="../WEB-INF/template/interno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="titulo">
+		Depósitos
+	</ui:define>
+	
+	<ui:define name="corpo">
+		<p:button value="Novo" outcome="CadastroDeposito" />
+		<br/>
+		<br/>
+		
+		<h:form id="formulario">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:dataTable id="tabelaDepositos" var="deposito" value="#{listaDepositosBean.depositos}" emptyMessage="Lista Vazia" paginator="true" rows="10" rowsPerPageTemplate="5,10,15,20,25,30"
+				filteredValue="#{listaDepositosBean.filteredDepositos}" filterMatchMode="contains">
+				<p:column headerText="Id" rendered="false" >
+					<h:outputText value="#{deposito.id}" />
+				</p:column>
+	
+				<p:column headerText="Data de depósito" sortBy="#{deposito.data}" filterBy="#{deposito.data}" >
+					<h:outputText value="#{deposito.data}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Valor" sortBy="#{deposito.valor}" filterBy="#{deposito.valor}" >
+					<h:outputText value="#{deposito.valor}">
+	    				<f:convertNumber type="currency"/>
+	    			</h:outputText>
+				</p:column>
+	
+				<p:column style="width:90px;text-align: center">
+		            <p:button icon="ui-icon-pencil" title="Editar" outcome="CadastroDeposito">
+		            	<f:param name="deposito" value="#{deposito.id}" />
+		            </p:button>
+		            <p:commandButton icon="ui-icon-trash" title="View" action="#{listaDepositosBean.excluir}" update=":formulario:tabelaDepositos">
+		            	<p:confirm header="Confirmar exclusão" message="Confirma excluir?" icon="ui-icon-alert" />
+		                <f:setPropertyActionListener value="#{deposito}" target="#{listaDepositosBean.depositoSelecionado}" />
+		            </p:commandButton>
+		        </p:column>
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

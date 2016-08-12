@@ -1,0 +1,51 @@
+<!DOCTYPE xhtml>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+  	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+  	
+    <h:head>
+        <title>Login</title>
+
+        <h:outputStylesheet library="css" name="login.css"/>
+        <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    </h:head>
+    <body>
+    	
+		<div class="container">
+			
+			
+			<form class="form-signin" id="login" method="post" action="${request.contextPath}/j_spring_security_check">
+				<h:panelGroup rendered="#{!empty param.login_error}">
+				<div class="alert alert-danger">
+					<!-- <span class="glyphicon glyphicon-exclamation-sign">
+					</span> -->
+					Erro: usuário e/ou senha inválidos!
+				</div>
+			</h:panelGroup>
+				
+				<h2 class="form-signin-heading">Login</h2>
+				
+				<h:outputLabel for="j_username" styleClass="sr-only" />
+				<h:inputText id="j_username" styleClass="form-control" required="true" pt:autofocus="true" pt:placeholder="E-mail" />
+				
+				<h:outputLabel for="j_password" styleClass="sr-only" />
+				<h:inputSecret id="j_password" styleClass="form-control" required="true" pt:placeholder="Senha" />
+				
+				<div class="checkbox">
+					<h:selectBooleanCheckbox id="_spring_security_remember_me" style="margin-left: 0px" />
+					<h:outputLabel for="_spring_security_remember_me" value="Manter conectado." />
+				</div>
+
+				<h:commandButton styleClass="btn btn-lg btn-primary btn-block"  
+					onclick="submit()" type="submit" value="Entrar" global="false" />
+				<script>
+					document.getElementyById('login').j_username.value = "#{SPRING_SECURITY_LAST_USERNAME}";
+				</script>
+			</form>
+	
+		</div>
+
+    </body>
+</html>
