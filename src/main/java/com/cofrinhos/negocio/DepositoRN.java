@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.cofrinhos.colecao.ColecaoTotalPorDia;
 import com.cofrinhos.dao.DepositoDAO;
 import com.cofrinhos.model.Deposito;
 import com.cofrinhos.util.DAOException;
@@ -48,6 +49,10 @@ public class DepositoRN implements IRN<Deposito>, Serializable {
 
 	public BigDecimal saldo() {
 		return depositoDAO.saldo();
+	}
+	
+	public List<ColecaoTotalPorDia> listaTotalPorDia() {
+		return depositoDAO.listaTotalPorDia();
 	}
 
 }

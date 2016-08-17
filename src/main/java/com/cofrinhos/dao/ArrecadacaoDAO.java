@@ -9,7 +9,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 
+import com.cofrinhos.colecao.ColecaoTotalPorDia;
 import com.cofrinhos.model.Arrecadacao;
 import com.cofrinhos.util.DAOException;
 
@@ -53,5 +55,16 @@ public class ArrecadacaoDAO implements IDAO<Arrecadacao> {
 		return (BigDecimal) session.createCriteria(Arrecadacao.class)   
 		           .setProjection(Projections.sum(Arrecadacao.Fields.VALOR.toString())).uniqueResult();
 	}
+	
 
+	@SuppressWarnings("unchecked")
+	public List<ColecaoTotalPorDia> listaTotalPorDia() {
+		return session.createCriteria(Arrecadacao.class)
+				.setProjection(Projections.projectionList()
+					.add(Projections.property(Arrecadacao.Fields.DATA_RECOLHIMENTO.toString()), ColecaoTotalPorDia.Fields.DATA.toString())
+					.add(Projections.sum(Arrecadacao.Fields.VALOR.toString()), ColecaoTotalPorDia.Fields.VALOR.toString())
+					.add(Projections.groupProperty(Arrecadacao.Fields.DATA_RECOLHIMENTO.toString())))
+				.setResultTransformer(Transformers.aliasToBean(ColecaoTotalPorDia.class))
+				.list();
+	}
 }

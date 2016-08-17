@@ -15,8 +15,7 @@ import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 
-import com.cofrinhos.model.Arrecadacao;
-import com.cofrinhos.model.Deposito;
+import com.cofrinhos.colecao.ColecaoTotalPorDia;
 import com.cofrinhos.negocio.ArrecadacaoRN;
 import com.cofrinhos.negocio.DepositoRN;
 
@@ -73,11 +72,11 @@ public class SaldosBean implements Serializable{
         ChartSeries arrecadacoes = new ChartSeries();
         arrecadacoes.setLabel("Arrecadações");
         
-        List<Arrecadacao> arrecadacoesFind = arrecadacaoRN.findAll();
+        List<ColecaoTotalPorDia> arrecadacoesFind = arrecadacaoRN.listaTotalPorDia();
         SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
 
         for(int i = arrecadacoesFind.size() - 1; i >= 0; i--) {
-			arrecadacoes.set(dt.format(arrecadacoesFind.get(i).getDataRecolhimento()),
+			arrecadacoes.set(dt.format(arrecadacoesFind.get(i).getData()),
 					arrecadacoesFind.get(i).getValor());
 		}
         
@@ -90,10 +89,11 @@ public class SaldosBean implements Serializable{
         ChartSeries depositos = new ChartSeries();
         depositos.setLabel("Depósitos");
         
-        List<Deposito> depositosFind = depositoRN.findAll();
+        List<ColecaoTotalPorDia> depositosFind = depositoRN.listaTotalPorDia();
         SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
         
         for(int i = depositosFind.size() - 1; i >= 0; i--) {
+        	
         	depositos.set(dt.format(depositosFind.get(i).getData()),
 					depositosFind.get(i).getValor());
 		}

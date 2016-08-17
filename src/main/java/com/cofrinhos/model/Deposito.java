@@ -24,6 +24,7 @@ public class Deposito implements Serializable{
 	
 	/* Campos usados para pesquisas */
 	public enum Fields {
+		DATA("data"),
 		VALOR("valor");
 
 		private String descricao;

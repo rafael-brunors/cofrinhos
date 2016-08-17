@@ -8,7 +8,9 @@ import javax.inject.Inject;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 
+import com.cofrinhos.colecao.ColecaoTotalPorDia;
 import com.cofrinhos.model.Deposito;
 import com.cofrinhos.util.DAOException;
 
@@ -46,6 +48,17 @@ public class DepositoDAO implements IDAO<Deposito>, Serializable {
 	public BigDecimal saldo() {
 		return (BigDecimal) session.createCriteria(Deposito.class)
 		           .setProjection(Projections.sum(Deposito.Fields.VALOR.toString())).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ColecaoTotalPorDia> listaTotalPorDia() {
+		return session.createCriteria(Deposito.class)
+				.setProjection(Projections.projectionList()
+					.add(Projections.property(Deposito.Fields.DATA.toString()), ColecaoTotalPorDia.Fields.DATA.toString())
+					.add(Projections.sum(Deposito.Fields.VALOR.toString()), ColecaoTotalPorDia.Fields.VALOR.toString())
+					.add(Projections.groupProperty(Deposito.Fields.DATA.toString())))
+				.setResultTransformer(Transformers.aliasToBean(ColecaoTotalPorDia.class))
+				.list();
 	}
 
 }
